@@ -2,21 +2,22 @@ import fetch from 'node-fetch';
 
 export default async function handler(req, res) {
   try {
-    // req.url 可能是 /api/okxweb3/api/v5/dex/aggregator/quote?amount=100
-    const prefix = '/api/okxweb3';
-    const url = new URL(req.url, `http://${req.headers.host}`);
-    
-    // 去掉前缀，保留动态路径和 query
-    const path = url.pathname.startsWith(prefix) ? url.pathname.slice(prefix.length) : url.pathname;
+    // 1. 获取访问路径和 query
+    const slug = req.query.slug || [];  // [...slug] 捕获路径
+    const path = '/' + slug.join('/');  // 拼成 /iujk 或 /api/v5/...
+    const query = req.url.includes('?') ? req.url.split('?')[1] : '';
+    const targetUrl = query
+      ? `https://web3.okx.com${path}?${query}`
+      : `https://web3.okx.com${path}`;
 
-    const targetUrl = `https://web3.okx.com${path}${url.search}`;
-
+    // 2. 发起请求
     const response = await fetch(targetUrl, {
       method: req.method,
       headers: req.headers,
       body: req.method !== 'GET' ? req.body : undefined,
     });
 
+    // 3. 返回结果
     const text = await response.text();
     res.status(response.status).set(Object.fromEntries(response.headers.entries())).send(text);
 
