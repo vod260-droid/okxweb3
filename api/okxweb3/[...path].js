@@ -9,6 +9,7 @@ export default async function handler(req, res) {
     if (path.startsWith(prefix)) {
       path = path.slice(prefix.length) || '/';
     }
+    path = path.replace(/&\.\.\.path=.*$/, '');
 
     // 构建目标 URL
     const targetUrl = `https://web3.okx.com${path}`;
