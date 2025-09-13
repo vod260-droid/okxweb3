@@ -31,7 +31,7 @@ res.status(200).json({ url: req.url ,targetUrl});
     });
 
     const text = await response.text();
-    res.status(response.status).set(Object.fromEntries(response.headers.entries())).send(text);
+   // res.status(response.status).set(Object.fromEntries(response.headers.entries())).send(text);
 
   } catch (err) {
     res.status(500).json({ error: err.message });
