@@ -22,7 +22,7 @@ if (index !== -1) {
 
     // 构建目标 URL
     const targetUrl = `https://web3.okx.com${path}`;
-res.status(200).json({ url: req.url ,targetUrl});
+//res.status(200).json({ url: req.url ,targetUrl});
     // 转发请求
     const response = await fetch(targetUrl, {
       method: req.method,
@@ -31,7 +31,7 @@ res.status(200).json({ url: req.url ,targetUrl});
     });
 
     const text = await response.text();
-   // res.status(response.status).set(Object.fromEntries(response.headers.entries())).send(text);
+    res.status(response.status).set(Object.fromEntries(response.headers.entries())).send(text);
 
   } catch (err) {
     res.status(500).json({ error: err.message });
