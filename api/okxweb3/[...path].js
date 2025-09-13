@@ -1,19 +1,16 @@
-// api/okxweb3/[...slug].js
 import fetch from 'node-fetch';
 
 export default async function handler(req, res) {
   try {
-    // 捕获路径
-    const slug = req.query.slug || [];          // [...slug] 捕获路径数组
-    const path = '/' + slug.join('/');          // /iujk 或 /api/v5/...
-    
-    // 原始 query 参数
-    const queryString = req.url.includes('?') ? req.url.split('?')[1] : '';
-    
+    // 去掉 /api/okxweb3 前缀
+    const prefix = '/api/okxweb3';
+    let path = req.url || '/';
+    if (path.startsWith(prefix)) {
+      path = path.slice(prefix.length) || '/';
+    }
+
     // 构建目标 URL
-    const targetUrl = queryString
-      ? `https://web3.okx.com${path}?${queryString}`
-      : `https://web3.okx.com${path}`;
+    const targetUrl = `https://web3.okx.com${path}`;
 
     // 转发请求
     const response = await fetch(targetUrl, {
